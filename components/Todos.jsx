@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 const url = "http://localhost:3000/api/todos";
 
-
 const Todos = ({ todos }) => {
   console.log(todos);
   const [tasks, setTasks] = useState(todos);
@@ -18,7 +17,7 @@ const Todos = ({ todos }) => {
     if (tasks?.length === 0) return;
     let filterTasks = tasks?.filter((task) => task.completed === true);
     setCompletedTasks(filterTasks);
-  }, [])
+  }, []);
 
   const handleChange = ({ currentTarget: input }) => {
     input.value === ""
@@ -26,7 +25,7 @@ const Todos = ({ todos }) => {
       : setTask((prev) => ({ ...prev, task: input.value }));
   };
 
-  const handleAddTodo = async(e) => {
+  const handleAddTodo = async (e) => {
     e.preventDefault();
     if (task.task === "") return;
     try {
@@ -49,7 +48,7 @@ const Todos = ({ todos }) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const handleUpdate = async (id) => {
     try {
@@ -108,7 +107,7 @@ const Todos = ({ todos }) => {
             />
             <div className="ml-2 flex items-center h-8 whitespace-nowrap">
               <button
-                className={`flex-[0 0 auto] p-3 text-center text-white bg-[#3d72fe] rounded-sm`}
+                className={`flex-[0 0 auto] p-3 text-center text-white bg-[#3d72fe] rounded-sm hover:bg-[#2E5AD4]`}
                 onClick={(e) => handleAddTodo(e)}
               >
                 {task._id ? "Update" : "Add"}
