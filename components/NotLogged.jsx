@@ -17,7 +17,7 @@ const NotLogged = () => {
           <button
             type="button"
             className="w-[40%] py-[15px] px-5 text-white bg-[#3d72fe] border-0 cursor-pointer m-0 outline-0 flex items-center justify-center relative select-none no-underline align-middle rounded hover:bg-[#2E5AD4] hover:shadow-md shadow-sm text-base font-medium btn-trans"
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/auth")}
           >
             Login
           </button>

@@ -2,19 +2,44 @@ import Head from "next/head";
 import Container from "../components/Container";
 import Header from "../components/Header";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/authContext";
 import NotLogged from "../components/NotLogged";
-import { signIn, signOut, useSession } from "next-auth/react";
 import Loader from "../components/Loader";
 
 const url = "http://localhost:3000/api/todos";
+const authUrl = "http://localhost:3000/auth";
 
 export default function Home({ todos }) {
-  // const { isAuth } = useContext(AuthContext);
-  const { data: session, status } = useSession();
-  console.log(session, status);
-  const isLoading = status == "loading";
+  const { isAuth, setAuth, setUser, setTeams, teams } = useContext(AuthContext);
+  const [isLoading, setLoading] = useState(false);
+
+  const fetchTeams = async () => {
+    const { data } = await axios.get(`${authUrl}/getTeams`);
+    console.log(data.teams);
+    if (data.teams) {
+      if (data.teams[0] === null) return setTeams([]);
+     return setTeams(data.teams);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true);
+      const { data } = await axios.get(`${authUrl}/profile`, {
+        withCredentials: true,
+      });
+      console.log(data.user);
+      if (data.user) {
+        setLoading(false);
+        setAuth(true);
+        setUser(data.user);
+      }
+      if (data.user === undefined) return setLoading(false);
+    };
+    fetchUser();
+    fetchTeams();
+  }, []);
 
   return (
     <>
@@ -24,9 +49,8 @@ export default function Home({ todos }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {isLoading && <Loader />}
-      {!isLoading && !session && <NotLogged />}
-      {session?.user && <Container todos={todos} />}
-      {/* {session?.user ? <Container todos={todos} /> : <NotLogged />} */}
+      {!isLoading && !isAuth && <NotLogged />}
+      {isAuth && <Container todos={todos} />}
     </>
   );
 }
